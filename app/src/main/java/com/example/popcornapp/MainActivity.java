@@ -3,8 +3,12 @@ package com.example.popcornapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.popcornapp.Managers.SessionManager;
+import com.example.popcornapp.Managers.UserHandler;
+import com.example.popcornapp.Models.User;
 import com.example.popcornapp.ui.auth.LoginActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,41 +31,69 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // ---- VÉRIFIER SESSION ----
         SessionManager sessionManager = new SessionManager(this);
-
         if (!sessionManager.isLogged()) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return;
         }
 
+        // ---- AFFICHAGE UI ----
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
+
         binding.appBarMain.fab.setOnClickListener(view ->
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null)
-                        .setAnchorView(R.id.fab)
                         .show()
         );
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
+        // ---- DESTINATIONS ----
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home,
+                R.id.nav_gallery,
+                R.id.nav_slideshow,
+                R.id.nav_profile
+        )
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+
+        NavController navController = Navigation.findNavController(
+                this, R.id.nav_host_fragment_content_main
+        );
+
+        NavigationUI.setupActionBarWithNavController(
+                this, navController, mAppBarConfiguration
+        );
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // AJOUT DU LOGOUT ICI
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
+        // ---- AFFICHER NOM + EMAIL DANS LE HEADER ----
+        View header = navigationView.getHeaderView(0);
 
-            if (id == R.id.logout) {
+        TextView headerUsername = header.findViewById(R.id.headerUsername);
+        TextView headerEmail = header.findViewById(R.id.headerEmail);
+
+        String email = sessionManager.getUserEmail();
+
+        UserHandler userHandler = new UserHandler(this);
+        User currentUser = userHandler.getUserByEmail(email);
+
+        if (currentUser != null) {
+            headerUsername.setText(currentUser.getUsername());
+            headerEmail.setText(currentUser.getEmail());
+        }
+
+        // ---- LOGOUT ----
+        navigationView.setNavigationItemSelectedListener(item -> {
+
+            if (item.getItemId() == R.id.logout) {
+
                 SessionManager sessionOut = new SessionManager(MainActivity.this);
                 sessionOut.logout();
 
@@ -69,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
+
+            // Permet de garder la navigation intacte
+            item.setChecked(true);
 
             return NavigationUI.onNavDestinationSelected(item, navController)
                     || super.onOptionsItemSelected(item);
@@ -83,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavController navController = Navigation.findNavController(
+                this, R.id.nav_host_fragment_content_main
+        );
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

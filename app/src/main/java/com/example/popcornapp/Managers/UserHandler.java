@@ -15,7 +15,6 @@ public class UserHandler {
         dbHelper = new SQLiteHelper(context);
     }
 
-    // INSERT
     public boolean insertUser(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -30,7 +29,6 @@ public class UserHandler {
         return result != -1;
     }
 
-    // GET USER BY EMAIL
     public User getUserByEmail(String email) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -54,10 +52,8 @@ public class UserHandler {
         return null;
     }
 
-    // LOGIN
     public boolean login(String email, String password) {
         User u = getUserByEmail(email);
-        if (u == null) return false;
-        return u.getPassword().equals(password);
+        return u != null && u.getPassword().equals(password);
     }
 }
