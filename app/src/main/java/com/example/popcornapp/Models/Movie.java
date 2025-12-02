@@ -1,0 +1,50 @@
+package com.example.popcornapp.Models;
+
+import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
+public class Movie {
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("primaryTitle")
+    private String primaryTitle;
+
+    @SerializedName("primaryImage")
+    private PrimaryImage primaryImage;
+
+    @SerializedName("startYear")
+    private int startYear;
+
+    @SerializedName("genres")
+    private List<String> genres;
+
+    @SerializedName("rating")
+    private Rating rating;
+
+    // Getters
+    public String getId() { return id; }
+    public String getPrimaryTitle() { return primaryTitle; }
+    public PrimaryImage getPrimaryImage() { return primaryImage; }
+    public int getStartYear() { return startYear; }
+    public List<String> getGenres() { return genres; }
+    public Rating getRating() { return rating; }
+
+    public static class PrimaryImage {
+        @SerializedName("url")
+        private String url;
+
+        public String getUrl() { return url; }
+    }
+
+    public static class Rating {
+        @SerializedName("aggregateRating")
+        private double aggregateRating;
+
+        @SerializedName("voteCount")
+        private int voteCount;
+
+        public double getAggregateRating() { return aggregateRating; }
+        public int getVoteCount() { return voteCount; }
+    }
+}
