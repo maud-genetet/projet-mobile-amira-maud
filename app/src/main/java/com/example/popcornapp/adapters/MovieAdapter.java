@@ -1,5 +1,7 @@
 package com.example.popcornapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.popcornapp.MovieDetailActivity;
 import com.example.popcornapp.R;
 import com.example.popcornapp.Models.Movie;
 
@@ -18,11 +21,13 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private List<Movie> movies = new ArrayList<>();
+    private Context context;
 
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        context = parent.getContext();
+        View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_movie, parent, false);
         return new MovieViewHolder(view);
     }
@@ -31,6 +36,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         Movie movie = movies.get(position);
         holder.bind(movie);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MovieDetailActivity.class);
+            intent.putExtra("MOVIE_ID", movie.getId());
+            context.startActivity(intent);
+        });
     }
 
     @Override

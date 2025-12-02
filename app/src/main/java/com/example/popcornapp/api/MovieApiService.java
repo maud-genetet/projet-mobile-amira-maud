@@ -1,8 +1,10 @@
 package com.example.popcornapp.api;
 
+import com.example.popcornapp.Models.MovieDetail;
 import com.example.popcornapp.Models.MovieResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MovieApiService {
@@ -11,4 +13,7 @@ public interface MovieApiService {
             @Query("types") String types,
             @Query("limit") int limit
     );
+
+    @GET("titles/{titleId}")
+    Call<MovieDetail> getMovieDetail(@Path("titleId") String titleId);
 }
