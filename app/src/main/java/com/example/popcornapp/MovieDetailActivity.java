@@ -52,19 +52,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         // Initialiser les vues
-        movieDetailPoster = findViewById(R.id.movieDetailPoster);
-        movieDetailTitle = findViewById(R.id.movieDetailTitle);
-        movieDetailYear = findViewById(R.id.movieDetailYear);
-        movieDetailRating = findViewById(R.id.movieDetailRating);
-        movieDetailGenres = findViewById(R.id.movieDetailGenres);
-        movieDetailPlot = findViewById(R.id.movieDetailPlot);
-        movieDetailDirectors = findViewById(R.id.movieDetailDirectors);
-        progressBarDetail = findViewById(R.id.progressBarDetail);
+        moviePoster = findViewById(R.id.movieDetailPoster);
+        movieTitle = findViewById(R.id.movieDetailTitle);
+        movieYear = findViewById(R.id.movieDetailYear);
+        movieRating = findViewById(R.id.movieDetailRating);
+        movieGenres = findViewById(R.id.movieDetailGenres);
+        moviePlot = findViewById(R.id.movieDetailPlot);
+        movieDirectors = findViewById(R.id.movieDetailDirectors);
+        progressBar = findViewById(R.id.progressBarDetail);
         btnLike = findViewById(R.id.btnLike);
 
 
-        // Récupérer l'ID du film depuis l'intent
-        String movieId = getIntent().getStringExtra("MOVIE_ID");
+        this.movieId = getIntent().getStringExtra("MOVIE_ID");
+
 
         if (movieId == null || movieId.isEmpty()) {
             Toast.makeText(this, "Erreur: ID du film manquant", Toast.LENGTH_SHORT).show();
@@ -104,6 +104,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "ERREUR: btnLike est NULL!");
         }
+
+        updateLikeButton();
 
         // Charger les détails du film
         loadMovieDetails(movieId);

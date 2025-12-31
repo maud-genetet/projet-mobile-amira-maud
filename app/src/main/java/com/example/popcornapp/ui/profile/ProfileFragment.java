@@ -51,37 +51,31 @@ public class ProfileFragment extends Fragment implements LikesAdapter.OnLikeRemo
     }
 
     private void loadUserProfile() {
-        // 1) Get session email
         SessionManager sessionManager = new SessionManager(requireContext());
         String email = sessionManager.getUserEmail();
 
-        // 2) Load user from DB
         UserHandler userHandler = new UserHandler(requireContext());
         User user = userHandler.getUserByEmail(email);
 
         if (user != null) {
             txtUsername.setText(user.getUsername());
             txtEmail.setText(user.getEmail());
-        }
 
-            // 3) Load Likes
             LikesDAO likesDAO = new LikesDAO(requireContext());
             likesList = likesDAO.getLikesForUser(user.getId());
 
-            // 4) Setup adapter
             if (likesList != null && !likesList.isEmpty()) {
                 tvNoLikes.setVisibility(View.GONE);
                 recyclerViewLikes.setVisibility(View.VISIBLE);
-
                 likesAdapter = new LikesAdapter(likesList, likesDAO, this);
                 recyclerViewLikes.setAdapter(likesAdapter);
             } else {
                 recyclerViewLikes.setVisibility(View.GONE);
                 tvNoLikes.setVisibility(View.VISIBLE);
-                tvNoLikes.setText("Aucun film aimé pour le moment");
             }
         }
     }
+
 
     @Override
     public void onLikeRemoved(int position) {
