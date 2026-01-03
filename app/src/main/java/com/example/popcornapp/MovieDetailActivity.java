@@ -192,6 +192,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieYear.setText(String.valueOf(movie.getStartYear()));
 
         if (movie.getRating() != null) {
+            movieRating.setText(String.format("⭐ %.1f", movie.getRating().getAggregateRating()));
         }
 
         if (movie.getGenres() != null && !movie.getGenres().isEmpty()) {
