@@ -1,14 +1,19 @@
 package com.example.popcornapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.popcornapp.MovieDetailActivity;
 import com.example.popcornapp.Managers.LikesHandler;
 import com.example.popcornapp.Models.Like;
 import com.example.popcornapp.R;
@@ -20,6 +25,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
     private List<Like> likes;
     private LikesHandler likesHandler;
     private OnLikeRemovedListener onLikeRemovedListener;
+    private Context context;
 
     public interface OnLikeRemovedListener {
         void onLikeRemoved(int position);
@@ -34,7 +40,8 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
     @NonNull
     @Override
     public LikeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_like, parent, false);
+        context = parent.getContext();
+        View view = LayoutInflater.from(context).inflate(R.layout.item_like, parent, false);
         return new LikeViewHolder(view);
     }
 
@@ -44,10 +51,16 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
 
         holder.tvTitle.setText(like.getTitle());
 
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MovieDetailActivity.class);
+            intent.putExtra("MOVIE_ID", like.getItemId());
+            context.startActivity(intent);
+        });
+
         holder.btnRemove.setOnClickListener(v -> {
             likesHandler.removeLike(like.getUserId(), like.getItemId());
             likes.remove(position);
-            notifyItemRemoved(position);
+                notifyItemRemoved(position);
             notifyItemRangeChanged(position, likes.size());
 
             if (onLikeRemovedListener != null) {
