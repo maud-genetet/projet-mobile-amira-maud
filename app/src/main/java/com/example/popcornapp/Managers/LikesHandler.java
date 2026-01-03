@@ -9,11 +9,11 @@ import com.example.popcornapp.Models.Like;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LikesDAO {
+public class LikesHandler {
 
     private final SQLiteHelper dbHelper;
 
-    public LikesDAO(Context context) {
+    public LikesHandler(Context context) {
         dbHelper = new SQLiteHelper(context);
     }
 

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.popcornapp.Managers.LikesDAO;
+import com.example.popcornapp.Managers.LikesHandler;
 import com.example.popcornapp.Managers.SessionManager;
 import com.example.popcornapp.Managers.UserHandler;
 import com.example.popcornapp.Models.MovieDetail;
@@ -44,7 +44,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private String movieId;
     private int currentUserId = -1;
-    private LikesDAO likesDAO;
+    private LikesHandler likesHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +72,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialiser les DAOs et Managers
-        likesDAO = new LikesDAO(this);
+        // Initialiser les Handlers et Managers
+        likesHandler = new LikesHandler(this);
         SessionManager sessionManager = new SessionManager(this);
         UserHandler userHandler = new UserHandler(this);
 
@@ -198,12 +198,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         try {
-            boolean isCurrentlyLiked = likesDAO.isLiked(currentUserId, movieId);
+            boolean isCurrentlyLiked = likesHandler.isLiked(currentUserId, movieId);
             Log.d(TAG, "Film actuellement liké: " + isCurrentlyLiked);
 
             if (isCurrentlyLiked) {
                 // Supprimer le like
-                if (likesDAO.removeLike(currentUserId, movieId)) {
+                if (likesHandler.removeLike(currentUserId, movieId)) {
                     Log.d(TAG, "Like supprimé avec succès");
                     Toast.makeText(this, "Like supprimé", Toast.LENGTH_SHORT).show();
                     updateLikeButton();
@@ -213,7 +213,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             } else {
                 // Ajouter le like
-                if (likesDAO.addLike(currentUserId, movieId, movieTitle.getText().toString())) {
+                if (likesHandler.addLike(currentUserId, movieId, movieTitle.getText().toString())) {
                     Log.d(TAG, "Like ajouté avec succès");
                     Toast.makeText(this, "Film ajouté aux favoris", Toast.LENGTH_SHORT).show();
                     updateLikeButton();
@@ -237,7 +237,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         try {
-            boolean isLiked = likesDAO.isLiked(currentUserId, movieId);
+            boolean isLiked = likesHandler.isLiked(currentUserId, movieId);
             Log.d(TAG, "Film est liké: " + isLiked);
 
             if (isLiked) {

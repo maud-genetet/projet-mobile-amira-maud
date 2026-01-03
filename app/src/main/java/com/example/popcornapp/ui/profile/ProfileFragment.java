@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.popcornapp.Managers.LikesDAO;
+import com.example.popcornapp.Managers.LikesHandler;
 import com.example.popcornapp.Models.Like;
 import com.example.popcornapp.Managers.SessionManager;
 import com.example.popcornapp.Models.User;
@@ -62,13 +62,13 @@ public class ProfileFragment extends Fragment implements LikesAdapter.OnLikeRemo
             txtUsername.setText(user.getUsername());
             txtEmail.setText(user.getEmail());
 
-            LikesDAO likesDAO = new LikesDAO(requireContext());
-            likesList = likesDAO.getLikesForUser(user.getId());
+            LikesHandler likesHandler = new LikesHandler(requireContext());
+            likesList = likesHandler.getLikesForUser(user.getId());
 
             if (likesList != null && !likesList.isEmpty()) {
                 tvNoLikes.setVisibility(View.GONE);
                 recyclerViewLikes.setVisibility(View.VISIBLE);
-                likesAdapter = new LikesAdapter(likesList, likesDAO, this);
+                likesAdapter = new LikesAdapter(likesList, likesHandler, this);
                 recyclerViewLikes.setAdapter(likesAdapter);
             } else {
                 recyclerViewLikes.setVisibility(View.GONE);
