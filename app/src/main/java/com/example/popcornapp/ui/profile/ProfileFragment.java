@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.popcornapp.Managers.LikesDAO;
+import com.example.popcornapp.Models.Like;
 import com.example.popcornapp.Managers.SessionManager;
 import com.example.popcornapp.Models.User;
 import com.example.popcornapp.Managers.UserHandler;
@@ -27,7 +28,7 @@ public class ProfileFragment extends Fragment implements LikesAdapter.OnLikeRemo
     private TextView txtUsername, txtEmail, tvNoLikes;
     private RecyclerView recyclerViewLikes;
     private LikesAdapter likesAdapter;
-    private List<LikesDAO.Like> likesList;
+    private List<Like> likesList;
 
     @Nullable
     @Override

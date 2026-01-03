@@ -11,7 +11,7 @@ public class MovieDetail {
     private String primaryTitle;
 
     @SerializedName("primaryImage")
-    private Movie.PrimaryImage primaryImage;
+    private PrimaryImage primaryImage;
 
     @SerializedName("startYear")
     private int startYear;
@@ -20,7 +20,7 @@ public class MovieDetail {
     private List<String> genres;
 
     @SerializedName("rating")
-    private Movie.Rating rating;
+    private Rating rating;
 
     @SerializedName("plot")
     private String plot;
@@ -29,14 +29,37 @@ public class MovieDetail {
     private List<Director> directors;
 
     // Getters
-    public String getId() { return id; }
-    public String getPrimaryTitle() { return primaryTitle; }
-    public Movie.PrimaryImage getPrimaryImage() { return primaryImage; }
-    public int getStartYear() { return startYear; }
-    public List<String> getGenres() { return genres; }
-    public Movie.Rating getRating() { return rating; }
-    public String getPlot() { return plot; }
-    public List<Director> getDirectors() { return directors; }
+    public String getId() {
+        return id;
+    }
+
+    public String getPrimaryTitle() {
+        return primaryTitle;
+    }
+
+    public PrimaryImage getPrimaryImage() {
+        return primaryImage;
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public List<Director> getDirectors() {
+        return directors;
+    }
 
     public static class Director {
         @SerializedName("id")
@@ -45,7 +68,12 @@ public class MovieDetail {
         @SerializedName("displayName")
         private String displayName;
 
-        public String getId() { return id; }
-        public String getDisplayName() { return displayName; }
+        public String getId() {
+            return id;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 }

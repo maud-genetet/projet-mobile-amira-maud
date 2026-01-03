@@ -10,13 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.popcornapp.Managers.LikesDAO;
+import com.example.popcornapp.Models.Like;
 import com.example.popcornapp.R;
 
 import java.util.List;
 
 public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHolder> {
 
-    private List<LikesDAO.Like> likes;
+    private List<Like> likes;
     private LikesDAO likesDAO;
     private OnLikeRemovedListener onLikeRemovedListener;
 
@@ -24,7 +25,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
         void onLikeRemoved(int position);
     }
 
-    public LikesAdapter(List<LikesDAO.Like> likes, LikesDAO likesDAO, OnLikeRemovedListener listener) {
+    public LikesAdapter(List<Like> likes, LikesDAO likesDAO, OnLikeRemovedListener listener) {
         this.likes = likes;
         this.likesDAO = likesDAO;
         this.onLikeRemovedListener = listener;
@@ -39,7 +40,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
 
     @Override
     public void onBindViewHolder(@NonNull LikeViewHolder holder, int position) {
-        LikesDAO.Like like = likes.get(position);
+        Like like = likes.get(position);
 
         holder.tvItemId.setText("Film ID: " + like.getItemId());
         holder.tvItemType.setText("Type: " + like.getItemType());

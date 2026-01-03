@@ -23,28 +23,27 @@ public class Movie {
     private Rating rating;
 
     // Getters
-    public String getId() { return id; }
-    public String getPrimaryTitle() { return primaryTitle; }
-    public PrimaryImage getPrimaryImage() { return primaryImage; }
-    public int getStartYear() { return startYear; }
-    public List<String> getGenres() { return genres; }
-    public Rating getRating() { return rating; }
-
-    public static class PrimaryImage {
-        @SerializedName("url")
-        private String url;
-
-        public String getUrl() { return url; }
+    public String getId() {
+        return id;
     }
 
-    public static class Rating {
-        @SerializedName("aggregateRating")
-        private double aggregateRating;
+    public String getPrimaryTitle() {
+        return primaryTitle;
+    }
 
-        @SerializedName("voteCount")
-        private int voteCount;
+    public PrimaryImage getPrimaryImage() {
+        return primaryImage;
+    }
 
-        public double getAggregateRating() { return aggregateRating; }
-        public int getVoteCount() { return voteCount; }
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public Rating getRating() {
+        return rating;
     }
 }
