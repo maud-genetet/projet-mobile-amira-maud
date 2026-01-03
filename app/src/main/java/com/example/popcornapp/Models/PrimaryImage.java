@@ -7,5 +7,7 @@ public class PrimaryImage {
     @SerializedName("url")
     private String url;
 
-    public String getUrl() { return url; }
+    public String getUrl() {
+        return url;
+    }
 }

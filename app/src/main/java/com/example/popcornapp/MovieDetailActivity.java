@@ -51,7 +51,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        // Initialiser les vues
         moviePoster = findViewById(R.id.movieDetailPoster);
         movieTitle = findViewById(R.id.movieDetailTitle);
         movieYear = findViewById(R.id.movieDetailYear);
@@ -62,9 +61,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarDetail);
         btnLike = findViewById(R.id.btnLike);
 
-
         this.movieId = getIntent().getStringExtra("MOVIE_ID");
-
 
         if (movieId == null || movieId.isEmpty()) {
             Toast.makeText(this, "Erreur: ID du film manquant", Toast.LENGTH_SHORT).show();
@@ -72,7 +69,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialiser les Handlers et Managers
         likesHandler = new LikesHandler(this);
         SessionManager sessionManager = new SessionManager(this);
         UserHandler userHandler = new UserHandler(this);
@@ -97,7 +93,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Bouton Like
         if (btnLike != null) {
             btnLike.setOnClickListener(v -> toggleLike());
             Log.d(TAG, "Listener du bouton Like configuré");
@@ -107,7 +102,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         updateLikeButton();
 
-        // Charger les détails du film
         loadMovieDetails(movieId);
     }
 
@@ -117,71 +111,64 @@ public class MovieDetailActivity extends AppCompatActivity {
         MovieApiService apiService = RetrofitClient.getClient()
                 .create(MovieApiService.class);
 
-            Call<MovieDetail> call = apiService.getMovieDetail(movieId);
+        Call<MovieDetail> call = apiService.getMovieDetail(movieId);
 
-            call.enqueue(new Callback<MovieDetail>() {
-                @Override
-                public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
+        call.enqueue(new Callback<MovieDetail>() {
+            @Override
+            public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
                 progressBar.setVisibility(View.GONE);
 
-                    if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     displayMovieDetails(response.body());
-                    } else {
+                } else {
                     Toast.makeText(MovieDetailActivity.this,
                             "Erreur lors du chargement des détails",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                            Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<MovieDetail> call, Throwable t) {
+            @Override
+            public void onFailure(Call<MovieDetail> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(MovieDetailActivity.this,
                         "Erreur: " + t.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void displayMovieDetails(MovieDetail movie) {
-            // Titre
         movieTitle.setText(movie.getPrimaryTitle());
 
-            // Année
         movieYear.setText(String.valueOf(movie.getStartYear()));
 
-        // Note
         if (movie.getRating() != null) {
-        movieRating.setText(String.format("⭐ %.1f", movie.getRating().getAggregateRating()));
+            movieRating.setText(String.format("⭐ %.1f", movie.getRating().getAggregateRating()));
         }
 
-        // Genres
         if (movie.getGenres() != null && !movie.getGenres().isEmpty()) {
-        movieGenres.setText(String.join(", ", movie.getGenres()));
+            movieGenres.setText(String.join(", ", movie.getGenres()));
         }
 
-        // Synopsis
         if (movie.getPlot() != null && !movie.getPlot().isEmpty()) {
-        moviePlot.setText(movie.getPlot());
+            moviePlot.setText(movie.getPlot());
         } else {
-        moviePlot.setText("Aucun synopsis disponible.");
+            moviePlot.setText("Aucun synopsis disponible.");
         }
 
-        // Réalisateurs
         if (movie.getDirectors() != null && !movie.getDirectors().isEmpty()) {
-        StringBuilder directors = new StringBuilder();
-        for (int i = 0; i < movie.getDirectors().size(); i++) {
-            directors.append(movie.getDirectors().get(i).getDisplayName());
-            if (i < movie.getDirectors().size() - 1) {
-                directors.append(", ");
+            StringBuilder directors = new StringBuilder();
+            for (int i = 0; i < movie.getDirectors().size(); i++) {
+                directors.append(movie.getDirectors().get(i).getDisplayName());
+                if (i < movie.getDirectors().size() - 1) {
+                    directors.append(", ");
+                }
             }
-        }
-        movieDirectors.setText(directors.toString());
+            movieDirectors.setText(directors.toString());
         } else {
-        movieDirectors.setText("Information non disponible");
+            movieDirectors.setText("Information non disponible");
         }
 
-        // Affiche
         if (movie.getPrimaryImage() != null && movie.getPrimaryImage().getUrl() != null) {
             Glide.with(this)
                     .load(movie.getPrimaryImage().getUrl())
@@ -202,7 +189,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             Log.d(TAG, "Film actuellement liké: " + isCurrentlyLiked);
 
             if (isCurrentlyLiked) {
-                // Supprimer le like
                 if (likesHandler.removeLike(currentUserId, movieId)) {
                     Log.d(TAG, "Like supprimé avec succès");
                     Toast.makeText(this, "Like supprimé", Toast.LENGTH_SHORT).show();
@@ -212,7 +198,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "Erreur lors de la suppression", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                // Ajouter le like
                 if (likesHandler.addLike(currentUserId, movieId, movieTitle.getText().toString())) {
                     Log.d(TAG, "Like ajouté avec succès");
                     Toast.makeText(this, "Film ajouté aux favoris", Toast.LENGTH_SHORT).show();

@@ -35,7 +35,7 @@ public class UserHandler {
         Cursor cursor = db.query(SQLiteHelper.TABLE_USERS,
                 null,
                 SQLiteHelper.KEY_EMAIL + "=?",
-                new String[]{email},
+                new String[] { email },
                 null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -43,8 +43,7 @@ public class UserHandler {
                     cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteHelper.KEY_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.KEY_USERNAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.KEY_EMAIL)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.KEY_PASSWORD))
-            );
+                    cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.KEY_PASSWORD)));
             cursor.close();
             return u;
         }

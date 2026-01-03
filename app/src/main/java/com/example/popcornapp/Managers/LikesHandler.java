@@ -29,7 +29,6 @@ public class LikesHandler {
         values.put("item_id", itemId);
         values.put("title", title);
 
-
         long result = db.insert(SQLiteHelper.TABLE_LIKES, null, values);
         db.close();
 
@@ -43,9 +42,8 @@ public class LikesHandler {
                 SQLiteHelper.TABLE_LIKES,
                 null,
                 "user_id = ? AND item_id = ?",
-                new String[]{String.valueOf(userId), itemId},
-                null, null, null
-        );
+                new String[] { String.valueOf(userId), itemId },
+                null, null, null);
 
         boolean exists = cursor.getCount() > 0;
         cursor.close();
@@ -60,8 +58,7 @@ public class LikesHandler {
         int result = db.delete(
                 SQLiteHelper.TABLE_LIKES,
                 "user_id = ? AND item_id = ?",
-                new String[]{String.valueOf(userId), itemId}
-        );
+                new String[] { String.valueOf(userId), itemId });
 
         db.close();
 
@@ -74,11 +71,10 @@ public class LikesHandler {
 
         Cursor cursor = db.query(
                 SQLiteHelper.TABLE_LIKES,
-                new String[]{"id", "item_id", "title"},
+                new String[] { "id", "item_id", "title" },
                 "user_id = ?",
-                new String[]{String.valueOf(userId)},
-                null, null, null
-        );
+                new String[] { String.valueOf(userId) },
+                null, null, null);
 
         if (cursor.moveToFirst()) {
             do {

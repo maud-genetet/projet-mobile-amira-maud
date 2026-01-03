@@ -32,7 +32,8 @@ public class ProfileFragment extends Fragment implements LikesAdapter.OnLikeRemo
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -76,7 +77,6 @@ public class ProfileFragment extends Fragment implements LikesAdapter.OnLikeRemo
             }
         }
     }
-
 
     @Override
     public void onLikeRemoved(int position) {

@@ -12,8 +12,7 @@ public interface MovieApiService {
     @GET("titles")
     Call<MovieResponse> getMovies(
             @Query("types") String types,
-            @Query("limit") int limit
-    );
+            @Query("limit") int limit);
 
     @GET("titles/{titleId}")
     Call<MovieDetail> getMovieDetail(@Path("titleId") String titleId);
