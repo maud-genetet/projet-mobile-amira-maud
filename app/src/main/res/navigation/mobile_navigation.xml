@@ -11,7 +11,7 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <!-- <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.popcornapp.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
@@ -21,7 +21,7 @@
         android:id="@+id/nav_slideshow"
         android:name="com.example.popcornapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_slideshow" /> -->
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.popcornapp.ui.profile.ProfileFragment"
