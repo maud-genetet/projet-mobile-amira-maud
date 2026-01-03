@@ -213,7 +213,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             } else {
                 // Ajouter le like
-                if (likesDAO.addLike(currentUserId, movieId, "MOVIE")) {
+                if (likesDAO.addLike(currentUserId, movieId, movieTitle.getText().toString())) {
                     Log.d(TAG, "Like ajouté avec succès");
                     Toast.makeText(this, "Film ajouté aux favoris", Toast.LENGTH_SHORT).show();
                     updateLikeButton();

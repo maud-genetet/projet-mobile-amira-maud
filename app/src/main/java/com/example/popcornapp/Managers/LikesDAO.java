@@ -17,7 +17,7 @@ public class LikesDAO {
         dbHelper = new SQLiteHelper(context);
     }
 
-    public boolean addLike(int userId, String itemId, String itemType) {
+    public boolean addLike(int userId, String itemId, String title) {
         if (isLiked(userId, itemId)) {
             return false;
         }
@@ -27,7 +27,8 @@ public class LikesDAO {
         ContentValues values = new ContentValues();
         values.put("user_id", userId);
         values.put("item_id", itemId);
-        values.put("item_type", itemType);
+        values.put("title", title);
+
 
         long result = db.insert(SQLiteHelper.TABLE_LIKES, null, values);
         db.close();
@@ -73,7 +74,7 @@ public class LikesDAO {
 
         Cursor cursor = db.query(
                 SQLiteHelper.TABLE_LIKES,
-                new String[]{"id", "item_id", "item_type"},
+                new String[]{"id", "item_id", "title"},
                 "user_id = ?",
                 new String[]{String.valueOf(userId)},
                 null, null, null
@@ -83,9 +84,9 @@ public class LikesDAO {
             do {
                 int likeId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String itemId = cursor.getString(cursor.getColumnIndexOrThrow("item_id"));
-                String itemType = cursor.getString(cursor.getColumnIndexOrThrow("item_type"));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
 
-                results.add(new Like(likeId, userId, itemId, itemType));
+                results.add(new Like(likeId, userId, itemId, title));
             } while (cursor.moveToNext());
         }
 

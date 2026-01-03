@@ -34,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "user_id INTEGER, " +
                 "item_id TEXT, " +
-                "item_type TEXT)");
+                "title TEXT)");
     }
 
     @Override

@@ -12,13 +12,13 @@ public class Like {
     private int id;
     private int userId;
     private String itemId;
-    private String itemType;
+    private String title;
 
-    public Like(int id, int userId, String itemId, String itemType) {
+    public Like(int id, int userId, String itemId, String title) {
         this.id = id;
         this.userId = userId;
         this.itemId = itemId;
-        this.itemType = itemType;
+        this.title = title;
     }
 
     public int getId() {
@@ -33,8 +33,8 @@ public class Like {
         return itemId;
     }
 
-    public String getItemType() {
-        return itemType;
+    public String getTitle() {
+        return title;
     }
 
     public String toString() {

@@ -42,8 +42,7 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
     public void onBindViewHolder(@NonNull LikeViewHolder holder, int position) {
         Like like = likes.get(position);
 
-        holder.tvItemId.setText("Film ID: " + like.getItemId());
-        holder.tvItemType.setText("Type: " + like.getItemType());
+        holder.tvTitle.setText(like.getTitle());
 
         holder.btnRemove.setOnClickListener(v -> {
             likesDAO.removeLike(like.getUserId(), like.getItemId());
@@ -63,13 +62,12 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
     }
 
     public static class LikeViewHolder extends RecyclerView.ViewHolder {
-        TextView tvItemId, tvItemType;
+        TextView tvTitle;
         Button btnRemove;
 
         public LikeViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvItemId = itemView.findViewById(R.id.tvItemId);
-            tvItemType = itemView.findViewById(R.id.tvItemType);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
             btnRemove = itemView.findViewById(R.id.btnRemove);
         }
     }
