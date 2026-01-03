@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,10 +19,13 @@ import com.example.popcornapp.Managers.SessionManager;
 import com.example.popcornapp.Managers.UserHandler;
 import com.example.popcornapp.Models.MovieDetail;
 import com.example.popcornapp.Models.User;
+import com.example.popcornapp.Models.Video;
+import com.example.popcornapp.Models.VideoResponse;
+import com.example.popcornapp.adapters.VideoAdapter;
 import com.example.popcornapp.api.MovieApiService;
 import com.example.popcornapp.api.RetrofitClient;
-import com.example.popcornapp.Models.MovieDetail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,6 +45,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieDirectors;
     private ProgressBar progressBar;
     private Button btnLike;
+    
+    private ListView listViewVideos;
+    private ProgressBar progressBarVideos;
+    private VideoAdapter videoAdapter;
+    private List<Video> videoList;
+    private TextView labelVideos;
 
     private String movieId;
     private int currentUserId = -1;
@@ -60,6 +70,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieDirectors = findViewById(R.id.movieDetailDirectors);
         progressBar = findViewById(R.id.progressBarDetail);
         btnLike = findViewById(R.id.btnLike);
+        
+        listViewVideos = findViewById(R.id.listViewVideos);
+        progressBarVideos = findViewById(R.id.progressBarVideos);
+        labelVideos = findViewById(R.id.labelVideos);
 
         this.movieId = getIntent().getStringExtra("MOVIE_ID");
 
@@ -102,7 +116,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         updateLikeButton();
 
+        videoList = new ArrayList<>();
+        videoAdapter = new VideoAdapter(this, videoList);
+        listViewVideos.setAdapter(videoAdapter);
+
         loadMovieDetails(movieId);
+        loadVideos(movieId);
     }
 
     private void loadMovieDetails(String movieId) {
@@ -133,6 +152,46 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Toast.makeText(MovieDetailActivity.this,
                         "Erreur: " + t.getMessage(),
                         Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadVideos(String movieId) {
+        progressBarVideos.setVisibility(View.VISIBLE);
+
+        MovieApiService apiService = RetrofitClient.getClient()
+                .create(MovieApiService.class);
+
+        Call<VideoResponse> call = apiService.getMovieVideo(movieId);
+
+        call.enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                progressBarVideos.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Video> videos = response.body().getvideos();
+                    if (videos != null && !videos.isEmpty()) {
+                        displayVideos(videos);
+                        Log.d(TAG, "Nombre de vidéos reçues: " + videos.size());
+                    } else {
+                        labelVideos.setVisibility(View.GONE);
+                        listViewVideos.setVisibility(View.GONE);
+                        Log.d(TAG, "Aucune vidéo disponible");
+                    }
+                } else {
+                    labelVideos.setVisibility(View.GONE);
+                    listViewVideos.setVisibility(View.GONE);
+                    Log.e(TAG, "Réponse non réussie: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VideoResponse> call, Throwable t) {
+                progressBarVideos.setVisibility(View.GONE);
+                labelVideos.setVisibility(View.GONE);
+                listViewVideos.setVisibility(View.GONE);
+                Log.e(TAG, "Erreur API: ", t);
             }
         });
     }
@@ -174,6 +233,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .load(movie.getPrimaryImage().getUrl())
                     .into(moviePoster);
         }
+    }
+
+    private void displayVideos(List<Video> videos) {
+        videoList.clear();
+        videoList.addAll(videos);
+        videoAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Vidéos affichées: " + videoList.size());
     }
 
     private void toggleLike() {
