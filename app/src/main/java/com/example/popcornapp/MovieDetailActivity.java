@@ -34,8 +34,6 @@ import retrofit2.Response;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private static final String TAG = "MovieDetailActivity";
-
     private ImageView moviePoster;
     private TextView movieTitle;
     private TextView movieYear;
@@ -45,7 +43,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView movieDirectors;
     private ProgressBar progressBar;
     private Button btnLike;
-    
+
     private ListView listViewVideos;
     private ProgressBar progressBarVideos;
     private VideoAdapter videoAdapter;
@@ -70,7 +68,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieDirectors = findViewById(R.id.movieDetailDirectors);
         progressBar = findViewById(R.id.progressBarDetail);
         btnLike = findViewById(R.id.btnLike);
-        
+
         listViewVideos = findViewById(R.id.listViewVideos);
         progressBarVideos = findViewById(R.id.progressBarVideos);
         labelVideos = findViewById(R.id.labelVideos);
@@ -88,7 +86,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         UserHandler userHandler = new UserHandler(this);
 
         String email = sessionManager.getUserEmail();
-        Log.d(TAG, "Email de session: " + email);
 
         if (email == null) {
             Toast.makeText(this, "Erreur: Utilisateur non connecté", Toast.LENGTH_SHORT).show();
@@ -100,7 +97,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             currentUserId = currentUser.getId();
-            Log.d(TAG, "currentUserId: " + currentUserId);
         } else {
             Toast.makeText(this, "Erreur: Utilisateur non trouvé", Toast.LENGTH_SHORT).show();
             finish();
@@ -109,9 +105,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         if (btnLike != null) {
             btnLike.setOnClickListener(v -> toggleLike());
-            Log.d(TAG, "Listener du bouton Like configuré");
         } else {
-            Log.e(TAG, "ERREUR: btnLike est NULL!");
         }
 
         updateLikeButton();
@@ -173,16 +167,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                     List<Video> videos = response.body().getvideos();
                     if (videos != null && !videos.isEmpty()) {
                         displayVideos(videos);
-                        Log.d(TAG, "Nombre de vidéos reçues: " + videos.size());
                     } else {
                         labelVideos.setVisibility(View.GONE);
                         listViewVideos.setVisibility(View.GONE);
-                        Log.d(TAG, "Aucune vidéo disponible");
                     }
                 } else {
                     labelVideos.setVisibility(View.GONE);
                     listViewVideos.setVisibility(View.GONE);
-                    Log.e(TAG, "Réponse non réussie: " + response.code());
                 }
             }
 
@@ -191,7 +182,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 progressBarVideos.setVisibility(View.GONE);
                 labelVideos.setVisibility(View.GONE);
                 listViewVideos.setVisibility(View.GONE);
-                Log.e(TAG, "Erreur API: ", t);
             }
         });
     }
@@ -202,7 +192,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieYear.setText(String.valueOf(movie.getStartYear()));
 
         if (movie.getRating() != null) {
-            movieRating.setText(String.format("⭐ %.1f", movie.getRating().getAggregateRating()));
         }
 
         if (movie.getGenres() != null && !movie.getGenres().isEmpty()) {
@@ -239,11 +228,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         videoList.clear();
         videoList.addAll(videos);
         videoAdapter.notifyDataSetChanged();
-        Log.d(TAG, "Vidéos affichées: " + videoList.size());
     }
 
     private void toggleLike() {
-        Log.d(TAG, "toggleLike() appelé");
 
         if (currentUserId == -1 || movieId == null) {
             Toast.makeText(this, "Erreur: Données manquantes", Toast.LENGTH_SHORT).show();
@@ -252,56 +239,44 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         try {
             boolean isCurrentlyLiked = likesHandler.isLiked(currentUserId, movieId);
-            Log.d(TAG, "Film actuellement liké: " + isCurrentlyLiked);
 
             if (isCurrentlyLiked) {
                 if (likesHandler.removeLike(currentUserId, movieId)) {
-                    Log.d(TAG, "Like supprimé avec succès");
                     Toast.makeText(this, "Like supprimé", Toast.LENGTH_SHORT).show();
                     updateLikeButton();
                 } else {
-                    Log.e(TAG, "Erreur lors de la suppression du like");
                     Toast.makeText(this, "Erreur lors de la suppression", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (likesHandler.addLike(currentUserId, movieId, movieTitle.getText().toString())) {
-                    Log.d(TAG, "Like ajouté avec succès");
                     Toast.makeText(this, "Film ajouté aux favoris", Toast.LENGTH_SHORT).show();
                     updateLikeButton();
                 } else {
-                    Log.e(TAG, "Erreur lors de l'ajout du like");
                     Toast.makeText(this, "Erreur lors de l'ajout du like", Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "Erreur dans toggleLike", e);
             Toast.makeText(this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateLikeButton() {
-        Log.d(TAG, "updateLikeButton() appelé");
 
         if (btnLike == null) {
-            Log.e(TAG, "ERREUR: btnLike est NULL dans updateLikeButton!");
             return;
         }
 
         try {
             boolean isLiked = likesHandler.isLiked(currentUserId, movieId);
-            Log.d(TAG, "Film est liké: " + isLiked);
 
             if (isLiked) {
-                btnLike.setText("❤️ Aimé");
+                btnLike.setText("Aimé");
                 btnLike.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-                Log.d(TAG, "Bouton changé en AIMÉ");
             } else {
-                btnLike.setText("🤍 Aimer");
+                btnLike.setText("Aimer");
                 btnLike.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-                Log.d(TAG, "Bouton changé en AIMER");
             }
         } catch (Exception e) {
-            Log.e(TAG, "Erreur dans updateLikeButton", e);
         }
     }
 
