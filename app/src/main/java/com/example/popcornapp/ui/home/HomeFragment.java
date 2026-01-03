@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private MovieAdapter movieAdapter;
+    private static final int LIMIT = 20;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         setupRecyclerView();
+        setupSearchView();
         loadMovies();
 
         return root;
@@ -47,13 +50,35 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(movieAdapter);
     }
 
+    private void setupSearchView() {
+        SearchView searchView = binding.searchViewMovies;
+        
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!query.trim().isEmpty()) {
+                    searchMovies(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!newText.trim().isEmpty()) {
+                    searchMovies(newText);
+                }
+                return false;
+            }
+        });
+    }
+
     private void loadMovies() {
         binding.progressBar.setVisibility(View.VISIBLE);
 
         MovieApiService apiService = RetrofitClient.getClient()
                 .create(MovieApiService.class);
 
-        Call<MovieResponse> call = apiService.getMovies("MOVIE", 20);
+        Call<MovieResponse> call = apiService.getMovies("MOVIE", LIMIT);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override
@@ -64,6 +89,43 @@ public class HomeFragment extends Fragment {
                     movieAdapter.setMovies(response.body().getTitles());
                 } else {
                     Toast.makeText(getContext(), "Erreur lors du chargement",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                binding.progressBar.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Erreur: " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void searchMovies(String query) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        MovieApiService apiService = RetrofitClient.getClient()
+                .create(MovieApiService.class);
+
+        Call<MovieResponse> call = apiService.searchMovies(query, LIMIT);
+
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                binding.progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Movie> movies = response.body().getTitles();
+                    if (movies != null && !movies.isEmpty()) {
+                        movieAdapter.setMovies(movies);
+                    } else {
+                        movieAdapter.setMovies(null);
+                        Toast.makeText(getContext(), "Aucun film trouvé",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Erreur lors de la recherche",
                             Toast.LENGTH_SHORT).show();
                 }
             }

@@ -19,4 +19,9 @@ public interface MovieApiService {
 
     @GET("titles/{titleId}/videos")
     Call<VideoResponse> getMovieVideo(@Path("titleId") String titleId);
+
+    @GET("search/titles")
+    Call<MovieResponse> searchMovies(
+            @Query("query") String query,
+            @Query("limit") int limit);
 }
