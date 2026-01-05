@@ -17,10 +17,11 @@ import com.example.popcornapp.MovieDetailActivity;
 import com.example.popcornapp.Managers.LikesHandler;
 import com.example.popcornapp.Models.Like;
 import com.example.popcornapp.R;
+import com.example.popcornapp.adapters.LikeViewHolder;
 
 import java.util.List;
 
-public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHolder> {
+public class LikesAdapter extends RecyclerView.Adapter<LikeViewHolder> {
 
     private List<Like> likes;
     private LikesHandler likesHandler;
@@ -74,14 +75,5 @@ public class LikesAdapter extends RecyclerView.Adapter<LikesAdapter.LikeViewHold
         return likes.size();
     }
 
-    public static class LikeViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle;
-        Button btnRemove;
-
-        public LikeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            btnRemove = itemView.findViewById(R.id.btnRemove);
-        }
-    }
+    
 }

@@ -60,20 +60,4 @@ public class MovieDetail {
     public List<Director> getDirectors() {
         return directors;
     }
-
-    public static class Director {
-        @SerializedName("id")
-        private String id;
-
-        @SerializedName("displayName")
-        private String displayName;
-
-        public String getId() {
-            return id;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
 }

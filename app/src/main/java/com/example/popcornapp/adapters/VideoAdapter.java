@@ -80,11 +80,4 @@ public class VideoAdapter extends ArrayAdapter<Video> {
             Toast.makeText(context, "Erreur: impossible d'ouvrir le lien", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private static class ViewHolder {
-        ImageView videoImage;
-        TextView videoName;
-        TextView videoType;
-        TextView videoDuration;
-    }
 }
